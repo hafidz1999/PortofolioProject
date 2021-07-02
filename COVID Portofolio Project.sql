@@ -58,6 +58,7 @@ GROUP BY location
 --total case dan kematian, plus persentasi
 SELECT SUM(new_cases) AS total_cases, SUM(CAST(new_deaths AS INT)) AS total_deaths, SUM(CAST(new_deaths AS INT))/SUM(new_cases)*100 AS DeathPercentage
 FROM PortofolioProject.dbo.CovidDeaths
+WHERE continent is not null
 ORDER BY 1,2
 
 --melihat populasi total dengan vaksinasi dan rolling count tervaksinasi
@@ -131,3 +132,23 @@ WHERE dea.location like '%indo%'
 --dan di tes
 SELECT *
 FROM PercentVaccinated
+
+
+--Tableau #2
+SELECT location, SUM(CAST(new_deaths AS INT)) AS TotalDeathCount
+FROM PortofolioProject.dbo.CovidDeaths
+WHERE continent IS NULL AND location NOT IN ('World', 'European Union', 'International')
+GROUP BY location
+ORDER BY TotalDeathCount DESC
+
+--Tableau #3
+SELECT location, population, MAX(total_cases) AS HighestInfectionCount, MAX((total_cases/population))*100 AS PercentPopulationInfected
+FROM PortofolioProject.dbo.CovidDeaths
+GROUP BY location, population
+ORDER BY PercentPopulationInfected DESC
+
+--Tableau #4
+SELECT Location, Population, date, MAX(total_cases) AS HighestInfectionCount, MAX((total_cases/population))*100 AS PercentPopulationInfected
+FROM PortofolioProject.dbo.CovidDeaths
+GROUP BY Location, Population, date
+ORDER BY PercentPopulationInfected DESC
